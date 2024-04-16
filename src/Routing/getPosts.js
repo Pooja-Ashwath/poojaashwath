@@ -17,22 +17,28 @@ function GetPost(props) {
     return res.data;
   }
 
-  function params() {
+  async function params() {
     const params = new window.URLSearchParams(window.location.search);
     const records = [];
+    const netreq = [];
     if (params.get("id") <= 10) {
       for (let i = 1; i <= params.get("id"); i++) {
-        async function f1() {
-          const data1 = await axios.get(
-            `https://jsonplaceholder.typicode.com/posts/${i}`
-          );
-          records.push(data1.data);
-
-          setQueryData(records);
-        }
-
-        f1();
+        netreq.push(
+          axios.get(`https://jsonplaceholder.typicode.com/posts/${i}`)
+        );
       }
+
+      Promise.allSettled(netreq)
+        .then((res) => {
+          console.log("res is ", res);
+          setQueryData(
+            res
+              .filter((rec) => rec.status === "fulfilled")
+              .map((rec) => rec.value.data)
+          );
+        })
+
+        .catch((res) => {});
     }
   }
 
@@ -43,19 +49,18 @@ function GetPost(props) {
           setData(await f());
         }}
       >
-        Submit1
+        GetAllPosts
       </button>
 
-      {console.log(useLocation())}
+      {/* {console.log(useLocation())} */}
 
       {(Array.isArray(data) ? data : [data]).map((val) => {
         return (
           <div>
             <ul>
-              <li>{val.id}</li>
-              <li>{val.userId}</li>
+              <a href={`http://localhost:3000/post/${val.id}`}>{val.id} </a>
+
               <li>{val.title}</li>
-              <li>{val.body}</li>
             </ul>
           </div>
         );

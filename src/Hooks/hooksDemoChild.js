@@ -1,7 +1,13 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useMemo, useRef, useEffect } from "react";
 import HooksDemoParent from "./hooksDemoParent";
 
 function HooksDemoChild(props) {
+  useEffect(() => {
+    console.log("mounted");
+    return () => {
+      console.log("Heeeeeeeeeellllllllllllllll");
+    };
+  }, []);
   console.log("Hi", props);
 
   const f = () => {

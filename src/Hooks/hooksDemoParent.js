@@ -3,12 +3,12 @@ import { useState } from "react";
 import HooksDemoChild from "./hooksDemoChild";
 
 function HooksDemoParent() {
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(true);
   const [arr, setArr] = useState([1, 2, 3, 4]);
 
   return (
     <div>
-      <HooksDemoChild arr={arr} />
+      {toggle && <HooksDemoChild arr={arr} />}
       <button onClick={() => setToggle(!toggle)}> Toggle </button>
     </div>
   );
